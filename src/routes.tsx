@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import ErrorPage from "./pages/ErrorPage";
 import BaseComponent from "./components/BaseComponent";
+import ErrorPage from "./pages/ErrorPage";
+import Funcoes from "./pages/Funcoes";
 import Pessoas from "./pages/Pessoas";
 
 export const routes = createBrowserRouter([
@@ -26,7 +27,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: 'funcoes',
-                element: <h1>Funções</h1>,
+                element: <Funcoes />,
                 id: 'Funções',
             },
         ]

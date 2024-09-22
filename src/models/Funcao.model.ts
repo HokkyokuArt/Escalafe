@@ -1,6 +1,6 @@
 import { Status } from "../enum/Status";
 
-export type Funcoes = {
+export type Funcao = {
     id: number;
     nome: string;
     status: Status;

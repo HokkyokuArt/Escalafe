@@ -1,7 +1,7 @@
 import { Status } from "../enum/Status";
-import { Funcoes } from "../models/Funcoes.model";
+import { Funcao } from "../models/Funcao.model";
 
-export const funcoes: Funcoes[] = [
+export const funcoes: Funcao[] = [
     {
         id: 0,
         nome: 'MICROFONE',

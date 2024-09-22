@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, TextField } from "@mui/material";
+import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, TextField, useTheme } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { useState } from "react";
 import CustomDialog, { DialogProps } from "../components/CustomDialog";
@@ -7,7 +7,7 @@ import TableCustom, { ConfigCustomTable, OptionsRow } from "../components/TableC
 import { Status } from "../enum/Status";
 import useGenerateID from "../hooks/useGenerateID";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { Funcoes } from "../models/Funcoes.model";
+import { Funcao } from "../models/Funcao.model";
 import { Pessoa } from "../models/Pessoa.model";
 import { sortArray } from "../utils/utils";
 
@@ -20,6 +20,7 @@ const Pessoas = () => {
     const [shouldUpdateRows, setShouldUpdateRows] = useState(false);
     const { get, set } = useLocalStorage();
     const { getNewId } = useGenerateID();
+    const theme = useTheme();
 
     const setDialogOpen = (open: boolean) => {
         setDialogState(open);
@@ -35,7 +36,7 @@ const Pessoas = () => {
         setNovaPessoa({ id: getNewId('pessoas'), nome: '', funcoes: [], status: Status.ATIVO });
     };
 
-    const onChangeCheckbox = (checked: boolean, funcao: Funcoes) => {
+    const onChangeCheckbox = (checked: boolean, funcao: Funcao) => {
         setNovaPessoa(prev => {
             const funcoesCopy = prev?.funcoes?.slice() ?? [];
             const funcoesToSet = checked
@@ -145,7 +146,7 @@ const Pessoas = () => {
                     justifyContent: 'space-between',
                     gap: '20px'
                 }}>
-                <Button variant="contained" onClick={() => { resetPessoa(); setDialogOpen(false); }}>
+                <Button variant="contained" color="error" onClick={() => { resetPessoa(); setDialogOpen(false); }}>
                     Cancelar
                 </Button>
                 <Button variant="contained" color="success" onClick={savePessoa}>Salvar</Button>
@@ -164,8 +165,8 @@ const Pessoas = () => {
             },
             color: row => {
                 return row.status === Status.ATIVO
-                    ? 'green'
-                    : 'red';
+                    ? theme.palette.success.main
+                    : theme.palette.error.main;
             },
             label: row => {
                 return row.status === Status.ATIVO
@@ -188,7 +189,7 @@ const Pessoas = () => {
         {
             id: 'editar',
             icon: () => 'fa-solid fa-pencil',
-            color: () => '#b5e1ff',
+            color: () => theme.palette.info.main,
             label: () => 'Editar',
             onClick: row => {
                 setEditing(true);
@@ -199,7 +200,7 @@ const Pessoas = () => {
         {
             id: 'excluir',
             icon: () => 'fa-solid fa-trash-can',
-            color: () => 'red',
+            color: () => theme.palette.error.main,
             label: () => 'Excluir',
             onClick: row => {
                 const pessoas = get('pessoas');

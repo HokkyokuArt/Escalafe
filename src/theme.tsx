@@ -9,6 +9,15 @@ export const theme = createTheme({
         secondary: {
             main: '#d65e5e',
         },
+        info: {
+            main: '#b5e1ff',
+        },
+        error: {
+            main: '#8f1c1c'
+        },
+        success: {
+            main: '#008a07'
+        },
 
         text: {
             // primary: '#00FFFF'

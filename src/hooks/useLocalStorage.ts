@@ -1,18 +1,17 @@
-import { Funcoes } from '../models/Funcoes.model';
+import { Funcao } from '../models/Funcao.model';
 import { Pessoa } from '../models/Pessoa.model';
 import { funcoes } from '../providers/FuncoesDataProvider';
-import { pessoas } from '../providers/PessoasDataProvider';
 
 type LocalStorageState = {
     pessoas: Pessoa[];
-    funcoes: Funcoes[];
+    funcoes: Funcao[];
 };
 
 export type LocalStorageStateKey = keyof LocalStorageState;
 
 const getNewState = () => {
     const state: LocalStorageState = {
-        pessoas: pessoas,
+        pessoas: [],
         funcoes: funcoes,
     };
     return JSON.stringify(state);

@@ -6,16 +6,19 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
+import { Dispatch, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { routesInfo } from '../routes';
 import CustomIcon from './CustomIcon';
 
 type Props = {
-    sideMenuWidth: string;
     sideMenuOpen: boolean;
+    setSideMenuOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const SideBarMenu = ({ sideMenuWidth, sideMenuOpen }: Props) => {
+const sideMenuWidth = '240px';
+
+const SideBarMenu = ({ setSideMenuOpen, sideMenuOpen }: Props) => {
     const navigate = useNavigate();
 
     return (
@@ -32,7 +35,7 @@ const SideBarMenu = ({ sideMenuWidth, sideMenuOpen }: Props) => {
                 <Box sx={{ overflow: 'auto' }}>
                     <List>
                         {Object.values(routesInfo).map((info, index) => (
-                            <ListItem key={index} disablePadding onClick={() => { navigate(info.path); }}>
+                            <ListItem key={index} disablePadding onClick={() => { navigate(info.path); setSideMenuOpen(false); }}>
                                 <ListItemButton>
                                     <ListItemIcon>
                                         <CustomIcon icon={info.icon} />
