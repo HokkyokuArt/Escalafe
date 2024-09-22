@@ -9,10 +9,10 @@ import { TransitionProps } from '@mui/material/transitions';
 import React, { Dispatch, ReactElement, SetStateAction } from 'react';
 
 export type DialogProps = {
-    openState: {
-        open: boolean;
-        setOpen: Dispatch<SetStateAction<boolean>>;
-    };
+    state: [
+        open: boolean,
+        setState: Dispatch<SetStateAction<boolean>>,
+    ],
     onClose: () => void;
     content: {
         header: string;
@@ -21,18 +21,20 @@ export type DialogProps = {
     };
 };
 
-const CustomDialog = ({ openState, content, onClose }: DialogProps) => {
+const CustomDialog = ({ state, content, onClose }: DialogProps) => {
+
+    const [localState, setState] = state;
 
     const handleClose = () => {
         onClose();
-        openState.setOpen(false);
+        setState(false);
     };
 
     return (
         <Dialog
             fullWidth
             maxWidth={'md'}
-            open={openState.open}
+            open={localState}
             TransitionComponent={Transition}
             onClose={handleClose}
         >
