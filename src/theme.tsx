@@ -4,7 +4,10 @@ export const theme = createTheme({
     palette: {
         mode: 'dark',
         primary: {
-            main: '#5e0000'
+            main: '#5e0000',
+        },
+        secondary: {
+            main: '#d65e5e',
         },
 
         text: {
@@ -12,6 +15,20 @@ export const theme = createTheme({
         }
     },
     components: {
+        MuiTypography: {
+            styleOverrides: {
+                root: {
+                    color: '#fff'
+                }
+            }
+        },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    color: '#fff',
+                },
+            },
 
+        }
     },
 });

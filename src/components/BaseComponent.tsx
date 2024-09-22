@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import CustomBreadcrumb from './CustomBreadcrumb';
 import SideBarMenu from './SidebarMenu';
 import Topbar from './Topbar';
 
@@ -17,8 +18,13 @@ const BaseComponent = () => {
       <Box sx={{
         transition: 'padding .2s ease-in-out',
         marginTop: '64px',
-        paddingLeft: sideMenuOpen ? sideMenuWidth : 0,
+        padding: '20px',
+        paddingLeft: `calc(${(sideMenuOpen ? sideMenuWidth : 0)} + 20px)`,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px',
       }}>
+        <CustomBreadcrumb />
         <Outlet />
       </Box>
     </>

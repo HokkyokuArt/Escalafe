@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import ErrorPage from "./pages/ErrorPage";
 import BaseComponent from "./components/BaseComponent";
+import Pessoas from "./pages/Pessoas";
 
 export const routes = createBrowserRouter([
     {
@@ -20,7 +21,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: 'pessoas',
-                element: <h1>Pessoas</h1>,
+                element: <Pessoas />,
                 id: 'Pessoas',
             },
             {
@@ -31,3 +32,25 @@ export const routes = createBrowserRouter([
         ]
     }
 ]);
+
+export type RoutesName = '/home' | '/pessoas' | '/funcoes';
+export type RoutesInfo = { label: string; path: string, icon: string; };
+export type RoutesInfoMap = Record<RoutesName, RoutesInfo>;
+
+export const routesInfo: RoutesInfoMap = {
+    ['/home']: {
+        path: '/home',
+        label: 'Home',
+        icon: 'fa-solid fa-house',
+    },
+    ['/pessoas']: {
+        path: '/pessoas',
+        label: 'Pessoas',
+        icon: 'fa-solid fa-user-tie',
+    },
+    ['/funcoes']: {
+        path: '/funcoes',
+        label: 'Funções',
+        icon: 'fa-solid fa-gears',
+    }
+};
