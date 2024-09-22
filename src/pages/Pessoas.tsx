@@ -109,7 +109,7 @@ const Pessoas = () => {
                                 <FormControlLabel
                                     control={<Checkbox
                                         color="secondary"
-                                        checked={!!novaPessoa?.funcoes?.find(f => f.nome === funcao.nome) ?? false}
+                                        checked={!!novaPessoa?.funcoes?.find(f => f.nome === funcao.nome)}
                                         onChange={(_, checked) => { onChangeCheckbox(checked, funcao); }}
                                     />}
                                     label={funcao.nome} />
