@@ -73,11 +73,21 @@ const Topbar = ({ setSideMenuOpen }: Props) => {
                     >
                         <MenuIcon />
                     </IconButton>
+
+                    <img src='/public/favicon.png' style={{ height: '64px' }} />
+
                     <Typography
                         variant="h6"
                         noWrap
                         component="div"
-                        sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                        sx={{
+                            flexGrow: 1,
+                            display: { xs: 'none', sm: 'block' },
+                            fontWeight: '600',
+                            fontSize: '1.6rem',
+                            letterSpacing: '3px',
+                            fontFamily: "'Kanit', sans-serif",
+                        }}
                     >
                         Escalafe
                     </Typography>
