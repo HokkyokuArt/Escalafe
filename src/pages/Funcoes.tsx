@@ -248,6 +248,10 @@ const Funcoes = () => {
                 const funcoes = get('funcoes');
                 const filteredFuncoes = funcoes.filter(p => p.id !== row.id);
                 set('funcoes', filteredFuncoes);
+                pessoaOptions.forEach(p => {
+                    p.funcoes = p.funcoes.filter(f => f.id !== row.id);
+                });
+                set('pessoas', pessoaOptions);
                 setShouldUpdateRows(true);
             }
         },
