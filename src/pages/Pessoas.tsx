@@ -106,6 +106,7 @@ const Pessoas = () => {
                 <FormGroup>
                     <FormControl error={formError.nome}>
                         <TextField
+                            autoFocus
                             color="secondary"
                             fullWidth
                             id="nome"

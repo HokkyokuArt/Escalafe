@@ -1,9 +1,9 @@
-import useLocalStorage, { LocalStorageStateKey } from './useLocalStorage';
+import useLocalStorage, { LocalStorageEntityKey } from './useLocalStorage';
 
 const useGenerateID = () => {
     const { get } = useLocalStorage();
 
-    const getNewId = (key: LocalStorageStateKey) => {
+    const getNewId = (key: LocalStorageEntityKey) => {
         const state = get(key);
         return 1 + state.reduce((prev, current) => {
             const currentId = current.id;

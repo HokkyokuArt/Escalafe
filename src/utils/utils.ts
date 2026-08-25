@@ -1,3 +1,24 @@
+export const rgbToHex = (rgb: { r: number; g: number; b: number; }): string => {
+    const toHex = (value: number) => value.toString(16).padStart(2, '0');
+    return `#${toHex(rgb.r)}${toHex(rgb.g)}${toHex(rgb.b)}`;
+};
+
+export const hexToRgb = (hex: string): { r: number; g: number; b: number; } => {
+    const sanitized = hex.replace('#', '');
+    return {
+        r: parseInt(sanitized.substring(0, 2), 16),
+        g: parseInt(sanitized.substring(2, 4), 16),
+        b: parseInt(sanitized.substring(4, 6), 16),
+    };
+};
+
+export const abreviarNome = (nomeCompleto: string): string => {
+    const [primeiroNome, ...sobrenomes] = nomeCompleto.trim().split(/\s+/);
+    if (sobrenomes.length === 0) return primeiroNome;
+    const sobrenomesAbreviados = sobrenomes.map(sobrenome => `${sobrenome.charAt(0)}.`);
+    return [primeiroNome, ...sobrenomesAbreviados].join(' ');
+};
+
 export const resolve = (obj: any, field: string) => {
     const split = field.split('.');
     let toReturn = obj;

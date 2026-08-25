@@ -8,7 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import useLocalStorage, { LocalStorageStateKey } from '../hooks/useLocalStorage';
+import useLocalStorage, { LocalStorageEntityKey } from '../hooks/useLocalStorage';
 import { resolve, sortArray } from '../utils/utils';
 import CustomIcon from './CustomIcon';
 
@@ -30,7 +30,7 @@ export type OptionsRow = {
 };
 
 type Props = {
-    localStorageKey: LocalStorageStateKey;
+    localStorageKey: LocalStorageEntityKey;
     shouldUpdate: boolean;
     setShouldUpdate: Dispatch<SetStateAction<boolean>>;
     config: ConfigCustomTable[];
@@ -40,7 +40,7 @@ type Props = {
 const TableCustom = ({ config, localStorageKey, optionsRow, shouldUpdate, setShouldUpdate }: Props) => {
     const { get } = useLocalStorage();
     const getRows = () => {
-        const rowsState = get(localStorageKey);
+        const rowsState = get(localStorageKey) as Record<string, any>[];
         return sortArray(rowsState, { fieldToSort: 'nome' });
     };
 
@@ -56,7 +56,7 @@ const TableCustom = ({ config, localStorageKey, optionsRow, shouldUpdate, setSho
 
     return (
         <TableContainer component={Paper} sx={{ height: '80vh' }}>
-            <Table sx={{ minWidth: 650 }} stickyHeader >
+            <Table sx={{ minWidth: 650 }} stickyHeader size="small">
                 <TableHead>
                     <StyledTableRow>
                         {config.map(c => (
@@ -65,6 +65,7 @@ const TableCustom = ({ config, localStorageKey, optionsRow, shouldUpdate, setSho
                                 sx={{
                                     width: c.width,
                                     minWidth: c.minWidth,
+                                    py: '8px',
                                 }}
                             >
                                 {c.label}
@@ -87,17 +88,19 @@ const TableCustom = ({ config, localStorageKey, optionsRow, shouldUpdate, setSho
                                     sx={{
                                         width: c.width,
                                         minWidth: c.minWidth,
+                                        py: '4px',
                                     }}
                                 >
                                     {!!c.customTemplate && c.customTemplate(row, c)}
-                                    {!c.customTemplate && resolve(row, c.key)?.toString().toUpperCase()}
+                                    {!c.customTemplate && !!c.convertFn && c.convertFn(row, c)}
+                                    {!c.customTemplate && !c.convertFn && resolve(row, c.key)?.toString().toUpperCase()}
                                 </TableCell>
                             ))}
 
 
                             {!!options.length && (
                                 <TableCell
-                                    sx={{ width: 'min-content', }}
+                                    sx={{ width: 'min-content', py: '4px' }}
                                 >
                                     <Box sx={{ display: 'flex', gap: '10px' }}>
                                         {options.map(opt => {

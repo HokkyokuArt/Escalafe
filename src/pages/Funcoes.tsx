@@ -1,14 +1,16 @@
-import { Autocomplete, Box, Button, Checkbox, Chip, FormControl, FormGroup, TextField, useTheme } from "@mui/material";
+import { Autocomplete, Box, Button, Checkbox, Chip, FormControl, FormControlLabel, FormGroup, TextField, Typography, useTheme } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { useState } from "react";
 import CustomDialog, { DialogProps } from "../components/CustomDialog";
+import CustomIcon from "../components/CustomIcon";
 import FloatingActionsComponent, { FloatingActions } from "../components/FloatingActions";
 import TableCustom, { ConfigCustomTable, OptionsRow } from "../components/TableCustom";
 import { Status } from "../enum/Status";
 import useGenerateID from "../hooks/useGenerateID";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { Funcao } from "../models/Funcao.model";
+import { Funcao, Posicao } from "../models/Funcao.model";
 import { Pessoa } from "../models/Pessoa.model";
-import { sortArray } from "../utils/utils";
+import { hexToRgb, rgbToHex, sortArray } from "../utils/utils";
 
 type FuncaoLocalState = null | Partial<Funcao> & { pessoas: Pessoa[]; };
 
@@ -23,18 +25,53 @@ const Funcoes = () => {
     const { getNewId } = useGenerateID();
     const theme = useTheme();
     const pessoaOptions = sortArray(get('pessoas'), { fieldToSort: 'nome' });
+    const pdfConfigAtual = get('pdfConfig');
 
     const setDialogOpen = (open: boolean) => {
         setDialogState(open);
     };
 
+    const toggleCorCustomizada = (ativar: boolean) => {
+        setNovaFuncao(prev => ({
+            ...prev,
+            pessoas: prev?.pessoas ?? [],
+            corPar: ativar ? (prev?.corPar ?? pdfConfigAtual.corLinhaPar ?? { r: 255, g: 255, b: 255 }) : undefined,
+            corImpar: ativar ? (prev?.corImpar ?? pdfConfigAtual.corLinhaImpar ?? { r: 210, g: 225, b: 245 }) : undefined,
+            corFonte: ativar ? (prev?.corFonte ?? pdfConfigAtual.corFonte ?? { r: 0, g: 0, b: 0 }) : undefined,
+        }));
+    };
+
     const addNovaFuncao = () => {
-        setNovaFuncao({ id: getNewId('funcoes'), nome: '', status: Status.ATIVO, pessoas: [] });
+        setNovaFuncao({ id: getNewId('funcoes'), nome: '', status: Status.ATIVO, posicoes: [], pessoas: [] });
     };
 
     const resetFuncao = () => {
         setFormError({ nome: false });
         setNovaFuncao(null);
+    };
+
+    const addPosicao = () => {
+        setNovaFuncao(prev => {
+            const posicoes = prev?.posicoes ?? [];
+            const proximoId = 1 + posicoes.reduce((max, p) => Math.max(max, p.id), 0);
+            return { ...prev, pessoas: prev?.pessoas ?? [], posicoes: [...posicoes, { id: proximoId, nome: '' }] };
+        });
+    };
+
+    const updatePosicaoNome = (index: number, nome: string) => {
+        setNovaFuncao(prev => {
+            const posicoes = (prev?.posicoes ?? []).slice();
+            posicoes[index] = { ...posicoes[index], nome };
+            return { ...prev, pessoas: prev?.pessoas ?? [], posicoes };
+        });
+    };
+
+    const removePosicao = (index: number) => {
+        setNovaFuncao(prev => ({
+            ...prev,
+            pessoas: prev?.pessoas ?? [],
+            posicoes: (prev?.posicoes ?? []).filter((_, i) => i !== index),
+        }));
     };
 
     const saveFuncao = () => {
@@ -87,6 +124,11 @@ const Funcoes = () => {
             key: 'nome',
             label: 'Nome',
         },
+        {
+            key: 'posicoes',
+            label: 'Pessoas por dia',
+            convertFn: data => (data.posicoes?.length ? String(data.posicoes.length) : '1'),
+        },
     ];
 
     const dialogNovoProps: DialogProps = {
@@ -100,6 +142,7 @@ const Funcoes = () => {
                 <FormGroup>
                     <FormControl error={formError.nome}>
                         <TextField
+                            autoFocus
                             color="secondary"
                             fullWidth
                             id="nome"
@@ -174,6 +217,97 @@ const Funcoes = () => {
                                 })
                             }
 
+                        />
+                    </FormControl>
+
+                    <FormControl sx={{ mt: '10px' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: '10px' }}>
+                            <Typography variant="subtitle2">
+                                Posições (quando a função precisa de mais de uma pessoa por dia)
+                            </Typography>
+                            <Button size="small" variant="outlined" color="secondary" onClick={addPosicao}>
+                                Adicionar posição
+                            </Button>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary" sx={{ mb: '10px', display: 'block' }}>
+                            Deixe o nome em branco se as posições não tiverem um local específico (ex: 2 microfones iguais). Dê um nome quando cada posição for um local diferente (ex: Entrada, Corredor).
+                        </Typography>
+                        {(novaFuncao?.posicoes ?? []).map((posicao: Posicao, index: number) => (
+                            <Box key={posicao.id} sx={{ display: 'flex', gap: '10px', alignItems: 'center', mb: '10px' }}>
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    color="secondary"
+                                    variant="standard"
+                                    label={`Nome da posição ${index + 1} (opcional)`}
+                                    placeholder="Ex: Entrada"
+                                    value={posicao.nome}
+                                    onChange={e => updatePosicaoNome(index, e.target.value)}
+                                />
+                                <CustomIcon
+                                    icon="fa-solid fa-trash-can"
+                                    color={theme.palette.error.main}
+                                    onClick={() => removePosicao(index)}
+                                />
+                            </Box>
+                        ))}
+                    </FormControl>
+
+                    <FormControl sx={{ mt: '10px' }}>
+                        <FormControlLabel
+                            control={<Checkbox
+                                color="secondary"
+                                checked={!!novaFuncao?.corPar}
+                                onChange={(_, checked) => toggleCorCustomizada(checked)}
+                            />}
+                            label="Personalizar cor desta função (sobrescreve as cores padrão de linha par/ímpar)"
+                        />
+                        {!!novaFuncao?.corPar && (
+                            <Grid container spacing={2} sx={{ mt: '5px' }}>
+                                <Grid size={6}>
+                                    <Typography variant="body2">Cor linha par</Typography>
+                                    <input
+                                        type="color"
+                                        value={rgbToHex(novaFuncao.corPar)}
+                                        onChange={e => setNovaFuncao(prev => ({ ...prev, pessoas: prev?.pessoas ?? [], corPar: hexToRgb(e.target.value) }))}
+                                    />
+                                </Grid>
+                                <Grid size={6}>
+                                    <Typography variant="body2">Cor linha ímpar</Typography>
+                                    <input
+                                        type="color"
+                                        value={rgbToHex(novaFuncao.corImpar ?? pdfConfigAtual.corLinhaImpar ?? { r: 210, g: 225, b: 245 })}
+                                        onChange={e => setNovaFuncao(prev => ({ ...prev, pessoas: prev?.pessoas ?? [], corImpar: hexToRgb(e.target.value) }))}
+                                    />
+                                </Grid>
+                                <Grid size={6}>
+                                    <Typography variant="body2">Cor da fonte</Typography>
+                                    <input
+                                        type="color"
+                                        value={rgbToHex(novaFuncao.corFonte ?? pdfConfigAtual.corFonte ?? { r: 0, g: 0, b: 0 })}
+                                        onChange={e => setNovaFuncao(prev => ({ ...prev, pessoas: prev?.pessoas ?? [], corFonte: hexToRgb(e.target.value) }))}
+                                    />
+                                </Grid>
+                            </Grid>
+                        )}
+                    </FormControl>
+
+                    <FormControl sx={{ mt: '10px' }}>
+                        <FormControlLabel
+                            control={<Checkbox
+                                color="secondary"
+                                checked={!!novaFuncao?.designacaoSemana}
+                                onChange={(_, checked) => setNovaFuncao(prev => ({ ...prev, pessoas: prev?.pessoas ?? [], designacaoSemana: checked }))}
+                            />}
+                            label="Designação semanal (a mesma pessoa cobre a função a semana toda)"
+                        />
+                        <FormControlLabel
+                            control={<Checkbox
+                                color="secondary"
+                                checked={!!novaFuncao?.rotatividadeMaxima}
+                                onChange={(_, checked) => setNovaFuncao(prev => ({ ...prev, pessoas: prev?.pessoas ?? [], rotatividadeMaxima: checked }))}
+                            />}
+                            label="Rotatividade máxima (só repete uma pessoa após todas as outras já terem participado)"
                         />
                     </FormControl>
 

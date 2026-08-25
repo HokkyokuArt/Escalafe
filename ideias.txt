@@ -1,0 +1,10 @@
+nomes (sobrenome abreviado)
+ao gerar pdf, salva lista
+permitir gerar pdf da listagem
+aumentar content da visualização da pagina
+datas dd/mm/yyyy
+salvar a ultima ordem de colunas utilizadas
+remover header do escalafe e colocar o header correto 
+remover nome da escala e periodo
+mesclar celula da semana especial. 
+customizar cor da border da célula.

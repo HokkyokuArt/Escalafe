@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import React, { Dispatch, ReactElement, SetStateAction } from 'react';
+import React, { Dispatch, ReactElement, SetStateAction, useRef } from 'react';
 
 export type DialogProps = {
     state: [
@@ -24,10 +24,19 @@ export type DialogProps = {
 const CustomDialog = ({ state, content, onClose }: DialogProps) => {
 
     const [localState, setState] = state;
+    const conteudoRef = useRef<HTMLDivElement>(null);
 
     const handleClose = () => {
         onClose();
         setState(false);
+    };
+
+    const focarPrimeiroInput = () => {
+        const container = conteudoRef.current;
+        if (!container) return;
+        const candidatos = container.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea');
+        const alvo = Array.from(candidatos).find(el => !(el instanceof HTMLInputElement) || (el.type !== 'hidden' && el.type !== 'checkbox'));
+        alvo?.focus();
     };
 
     return (
@@ -36,6 +45,7 @@ const CustomDialog = ({ state, content, onClose }: DialogProps) => {
             maxWidth={'md'}
             open={localState}
             TransitionComponent={Transition}
+            TransitionProps={{ onEntered: focarPrimeiroInput }}
             onClose={handleClose}
         >
             <IconButton
@@ -52,7 +62,7 @@ const CustomDialog = ({ state, content, onClose }: DialogProps) => {
             </IconButton>
 
             <DialogTitle>{content.header}</DialogTitle>
-            <DialogContent>
+            <DialogContent ref={conteudoRef}>
                 <Box sx={{ paddingTop: '10px' }}>
                     {content.body}
                 </Box>
