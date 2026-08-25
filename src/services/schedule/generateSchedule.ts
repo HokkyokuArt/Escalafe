@@ -83,7 +83,6 @@ export const autoFillSchedule = (
     const gaps: GenerationGap[] = [];
     const pessoasAtivas = pessoas.filter(p => p.status === Status.ATIVO);
     const funcaoPorId = new Map(funcoes.map(f => [f.id, f]));
-    const ehDesignacaoSemana = (funcaoId: number) => !!funcaoPorId.get(funcaoId)?.designacaoSemana;
     const ehRotatividadeMaxima = (funcaoId: number) => !!funcaoPorId.get(funcaoId)?.rotatividadeMaxima;
 
     const participatesOnDay = (dayIndex: number, pessoaId: number) =>

@@ -16,13 +16,8 @@ export const routes = createBrowserRouter([
         children: [
             {
                 path: '',
-                element: <Navigate to={'home'} />,
+                element: <Navigate to={'escalas'} />,
                 id: '_redirectHome'
-            },
-            {
-                path: 'home',
-                element: <h1>HOME</h1>,
-                id: 'Home',
             },
             {
                 path: 'pessoas',
@@ -63,16 +58,11 @@ export const routes = createBrowserRouter([
     }
 ]);
 
-export type RoutesName = '/home' | '/pessoas' | '/funcoes' | '/semanas-especiais' | '/configuracoes' | '/escalas';
+export type RoutesName = '/pessoas' | '/funcoes' | '/semanas-especiais' | '/configuracoes' | '/escalas';
 export type RoutesInfo = { label: string; path: string, icon: string; };
 export type RoutesInfoMap = Record<RoutesName, RoutesInfo>;
 
 export const routesInfo: RoutesInfoMap = {
-    ['/home']: {
-        path: '/home',
-        label: 'Home',
-        icon: 'fa-solid fa-house',
-    },
     ['/escalas']: {
         path: '/escalas',
         label: 'Escalas',
