@@ -74,7 +74,7 @@ const Topbar = ({ setSideMenuOpen }: Props) => {
                         <MenuIcon />
                     </IconButton>
 
-                    <img src='/public/favicon.png' style={{ height: '64px' }} />
+                    <img src='/favicon.png' style={{ height: '64px' }} />
 
                     <Typography
                         variant="h6"

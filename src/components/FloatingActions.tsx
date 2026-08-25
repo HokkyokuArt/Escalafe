@@ -22,7 +22,7 @@ const FloatingActionsComponent = ({ floatingActions }: Props) => {
     return (
         <SpeedDial
             ariaLabel="SpeedDial tooltip example"
-            sx={{ position: 'absolute', bottom: 16, right: 16 }}
+            sx={{ position: 'fixed', bottom: 16, right: 16 }}
             icon={<SpeedDialIcon />}
             onClose={handleClose}
             onOpen={handleOpen}
@@ -34,6 +34,7 @@ const FloatingActionsComponent = ({ floatingActions }: Props) => {
                     icon={<Icon className={action.icon} />}
                     tooltipTitle={action.label}
                     tooltipOpen
+                    sx={{ '& .MuiSpeedDialAction-staticTooltipLabel': { whiteSpace: 'nowrap' } }}
                     onClick={() => {
                         action.onClick();
                         handleClose();

@@ -1,4 +1,5 @@
-import { Alert, Box, Button, Checkbox, FormControlLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, useTheme } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Button, Checkbox, FormControlLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, useTheme } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/material/Grid2';
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -498,14 +499,18 @@ const EscalaEditor = () => {
             )}
 
             {validation && !!validation.warnings.length && (
-                <Alert severity="warning">
-                    {validation.warnings.length} aviso(s):
-                    <ul>
-                        {validation.warnings.map((aviso, index) => (
-                            <li key={index}>{aviso.message}</li>
-                        ))}
-                    </ul>
-                </Alert>
+                <Accordion sx={{ backgroundColor: theme.palette.warning.light }}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography>{validation.warnings.length} aviso(s)</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <ul style={{ margin: 0 }}>
+                            {validation.warnings.map((aviso, index) => (
+                                <li key={index}>{aviso.message}</li>
+                            ))}
+                        </ul>
+                    </AccordionDetails>
+                </Accordion>
             )}
 
             {feedback && <Alert severity="info" onClose={() => setFeedback(null)}>{feedback}</Alert>}
